@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 #
 # MIT License
 #
@@ -45,7 +45,7 @@ def ping(device, destination, source=None, ttl=255, timeout=2, size=100, count=5
     if source:
         command += ' source %s' % source
     if debug:
-        print 'CMD: %s' % command
+        print('CMD: %s' % command)
     output = device.send_command(command)
     if '\n% ' in output or output.startswith('% '):
         result['error'] = output
@@ -70,7 +70,7 @@ def ping(device, destination, source=None, ttl=255, timeout=2, size=100, count=5
             result['success']['packet_loss'] = int((probes_sent - probes_received)/float(probes_sent)*100)
             results_array = []
             for i in range(probes_received):
-                results_array.append({'ip_address': unicode(destination), 'rtt': 0.0})
+                results_array.append({'ip_address': str(destination), 'rtt': 0.0})
             result['success'].update({'results': results_array})
         rtt = re.search(r'.* = (?P<rtt_min>\d+)\/(?P<rtt_avg>\d+)\/(?P<rtt_max>\d+).*', output, re.MULTILINE)
         if rtt:
@@ -103,14 +103,14 @@ result = ping(
     device=device,
     destination=helper.options.destination,
     source=helper.options.source or None,
-    #ttl=helper.options.,
+    #ttl=helper.options.ttl,
     timeout=helper.options.probe_timeout,
     size=helper.options.size,
     count=helper.options.count,
     debug=helper.options.show_debug
 )
 if helper.options.show_debug:
-    print result
+    print(result)
 
 if 'error' in result:
     helper.status(critical)
